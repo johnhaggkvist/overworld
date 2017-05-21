@@ -1,0 +1,10 @@
+#game {
+  background-color: black;
+  margin: -80px 0 0 -120px;
+  position: absolute;
+  width: 240px;
+  height: 160px;
+  z-index: 15;
+  top: 50%;
+  left: 50%;
+}
