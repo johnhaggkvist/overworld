@@ -1,4 +1,9 @@
-import App from './App';
+import Game from './Game';
 import './index.css';
 
-let app = new App("game");
+console.log("index");
+window.onload = function() {
+    console.log("Loaded");
+    let game = new Game("game");
+    game.start();
+};

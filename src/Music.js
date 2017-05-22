@@ -27,7 +27,7 @@ class Music {
             }
 
             if (this.playing) {
-                //this.playing.play();
+                this.playing.play();
             }
         }
     }
