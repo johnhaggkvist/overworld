@@ -17,14 +17,24 @@
       You need to enable JavaScript to run this app.
     </noscript>
     
+    <div id="loading" data-percent="" />
+    
     <canvas id="game" width="240" height="160" />
 
-    <div></div>
+    <div style="display:none">
+      <audio id="intro" class="resource" src="intro.mp3" loop preload="auto"></audio>
+      <audio id="overworld" class="resource" src="overworld.mp3" loop preload="auto"></audio>
+      <audio id="gamover" class="resource" src="gameover.mp3" loop preload="auto"></audio>
+    </div>
     <script>
+      let resources = ['webfonts']
+          loaded = [];
+
       WebFontConfig = {
-          google: {
-              families: ['Press Start 2P']
-          }
+        google: {
+            families: ['Press Start 2P']
+        },
+        active: () => loadedResource('webfonts')
       };
       (function(d) {
         var wf = d.createElement('script'), s = d.scripts[0];
@@ -32,6 +42,18 @@
         wf.async = true;
         s.parentNode.insertBefore(wf, s);
       })(document);
+
+      let loadedResource = (resource) => {
+        loaded.push(resource);
+        document.getElementById("loading").dataset.percent = loaded.length / resources.length;
+      };
+
+      for (let resource of document.getElementsByClassName('resource')) {
+        resources.push(resource.id);
+        let tag = resource.tagName.toLowerCase();
+        let event = tag === 'img' ? 'load' : 'canplay';
+        resource.addEventListener(event, () => loadedResource(resource.id));
+      }
     </script>
   </body>
 </html>
