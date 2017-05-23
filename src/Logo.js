@@ -30,8 +30,8 @@ class Logo {
         //context.shadowOffsetY = 1;
         //context.shadowOffsetX = 1;
         context.fillText("A tiny Zeldaish game", 30, 70);
-        context.fillText("made by stay home dad", 30, 80);
-        context.fillText(" John Forne in 2017", 30, 90);
+        context.fillText(" made by John Forne", 30, 80);
+        context.fillText("     in 2017", 30, 90);
         context.fillText(" music by visager.us", 30, 110);
 
         context.fillStyle = 'white';

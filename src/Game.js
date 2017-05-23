@@ -1,6 +1,7 @@
 import Music from './Music';
 import Text from './Text';
 import Logo from './Logo';
+import Controller from './Controller';
 import './Game.css';
 
 class Game {
@@ -12,6 +13,8 @@ class Game {
     this.height = this.canvas.height;
     this.context = this.canvas.getContext('2d');
     this.objects = [];
+
+    this.controller = new Controller();
   }
 
   start() {
@@ -21,7 +24,7 @@ class Game {
   intro() {
     this.gameloop();
     this.addObject(new Logo());
-    this.music.play("intro");
+    //this.music.play("intro");
     this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
   }
 
@@ -59,6 +62,10 @@ class Game {
   }
 
   update() {
+    if (this.controller.space()) {
+      this.addObject(new Text(Number.parseInt(Math.random()*1000, 10), this.width/2, this.height / 4 * 3));
+    }
+
     for (let object of this.objects) {
       if (!object.update()) {
         this.objects.splice(this.objects.indexOf(object), 1);
