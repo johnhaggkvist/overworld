@@ -1,6 +1,6 @@
 import Music from './Music';
 import Text from './Text';
-import logo from './logo.svg';
+import Logo from './Logo';
 import './Game.css';
 
 class Game {
@@ -20,6 +20,7 @@ class Game {
 
   intro() {
     this.gameloop();
+    this.addObject(new Logo());
     this.music.play("intro");
     this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
   }
