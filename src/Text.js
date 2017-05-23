@@ -11,6 +11,7 @@ class Text {
 
     spawn() {
         this.step = 0;
+        this.startY = this.y;
         let maxSpread = this.size / 20;
         this.direction = Math.random() * maxSpread * 2 - maxSpread;
     }
@@ -24,11 +25,13 @@ class Text {
     }
 
     update() {
-        this.x = this.x + this.direction;
-        this.y = this.y - Math.cos(this.step / 3) * 2;
-
         this.step = this.step + 1;
-        return this.step < 20;
+        let time = 25;
+        this.x = this.x + this.direction;
+        let bounce = (Math.cos(this.step / 2) * 4) * (time - this.step) / time;
+        this.y = this.startY + bounce;
+
+        return this.step < time;
     }
 }
 

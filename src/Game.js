@@ -18,7 +18,7 @@ class Game {
 
   start() {
     this.gameloop();
-    this.music.play("intro");
+    //this.music.play("intro");
   }
 
   addObject(object) {
