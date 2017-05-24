@@ -18,8 +18,7 @@ class Controller {
   }
 
   pressed(keyCode) {
-    console.log(this.keyStates[keyCode]);
-    return this.keyStates[keyCode];
+    return !!this.keyStates[keyCode];
   }
 
   up() {

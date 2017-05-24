@@ -2,10 +2,17 @@ import Music from './Music';
 import Text from './Text';
 import Logo from './Logo';
 import Controller from './Controller';
+import Player from './Player';
 import './Game.css';
 
 class Game {
-  constructor(canvasId) {    
+  SCENE = {
+    LOADING: 0,
+    INTRO: 1,
+    GAME: 2
+  }
+
+  constructor(canvasId) {
     this.music = new Music();
 
     this.canvas = document.getElementById(canvasId);
@@ -18,14 +25,24 @@ class Game {
   }
 
   start() {
-    this.loading();    
+    this.scene = this.SCENE.LOADING;
+    this.gameloop();
   }
 
   intro() {
-    this.gameloop();
+    this.objects = [];
     this.addObject(new Logo());
+    this.scene = this.SCENE.INTRO;
     //this.music.play("intro");
-    this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
+    //this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
+  }
+
+  game() {
+    this.objects = [];
+    this.scene = this.SCENE.GAME;
+    //this.music.play("overworld");
+    this.player = new Player(this.width / 2, this.height / 2);
+    this.addObject(this.player);
   }
 
   loading() {
@@ -44,8 +61,6 @@ class Game {
       this.context.fillRect(x - 2, y - 2, width + 4, 10 + 4);
       this.context.fillStyle = 'red';
       this.context.fillRect(x, y, width * percentage, 10);
-
-      requestAnimationFrame(() => this.loading());
     } 
   }
 
@@ -55,15 +70,23 @@ class Game {
   }
 
   gameloop() {
-    this.update();
-    this.draw();
-  
+    if (this.scene === this.SCENE.LOADING) {
+      this.loading();
+    } else {
+      this.update();
+      this.draw();
+    }
+
     requestAnimationFrame(() => this.gameloop());
   }
 
   update() {
-    if (this.controller.space()) {
-      this.addObject(new Text(Number.parseInt(Math.random()*1000, 10), this.width/2, this.height / 4 * 3));
+    if (this.scene === this.SCENE.INTRO && (this.controller.space() || this.controller.enter())) {
+      this.game();
+    } else if (this.scene === this.SCENE.GAME) {
+      if (this.controller.right()) {
+        this.player.right();
+      }
     }
 
     for (let object of this.objects) {

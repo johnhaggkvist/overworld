@@ -37,6 +37,7 @@ class Logo {
         context.fillStyle = 'white';
         context.globalAlpha = 0.5 + Math.abs(Math.cos(this.step / 40) / 2);
         context.fillText("<press space to play>", 30, 135);
+        context.globalAlpha = 1;
     }
 
     update() {

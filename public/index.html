@@ -16,15 +16,18 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    
-    <div id="loading" data-percent="" />
-    
-    <canvas id="game" width="240" height="160" class="big"/>
 
+    <canvas id="game" width="240" height="160" class="big"/>
+    
+    <div id="loading" data-percent="0" />
+    
     <div style="display:none">
       <audio id="intro" class="resource" src="intro.mp3" loop preload="auto"></audio>
       <audio id="overworld" class="resource" src="overworld.mp3" loop preload="auto"></audio>
       <audio id="gamover" class="resource" src="gameover.mp3" loop preload="auto"></audio>
+
+      <img id="player_down_0" src="images/player/down_0.png" class="resource">
+      <img id="player_right_0" src="images/player/right_0.png" class="resource">
     </div>
     <script>
       let resources = ['webfonts']
