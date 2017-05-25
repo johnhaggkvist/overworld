@@ -13,7 +13,7 @@ class Player {
     }
 
     draw(context) {
-        context.drawImage(document.getElementById(this.sprite), this.x - 12, this.y - 12);
+        context.drawImage(document.getElementById(this.sprite), this.x - 11, this.y - 13);
     }
 
     update() {
