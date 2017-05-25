@@ -44,6 +44,7 @@ class Game {
     //this.music.play("overworld");
     this.player = new Player(this.width / 2, this.height / 2);
     this.map = new WorldMap();
+    this.map.objects.forEach((object) => this.addObject(object));
   }
 
   loading() {
@@ -98,7 +99,7 @@ class Game {
     }
 
     if (this.map) this.map.update();
-    if (this.player) this.player.update();
+    if (this.player) this.player.update(this.objects);
 
     for (let object of this.objects) {
       if (!object.update()) {
@@ -111,11 +112,12 @@ class Game {
     this.context.clearRect(0, 0, this.width, this.height);
 
     if (this.map) this.map.draw(this.context);
-    if (this.player) this.player.draw(this.context);
 
     for (let object of this.objects) {
       object.draw(this.context);
     }
+
+    if (this.player) this.player.draw(this.context);
   }
 }
 

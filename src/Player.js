@@ -6,6 +6,8 @@ class Player {
         this.walkingStep = 0;
         this.direction = 'down';
         this.sprite = 'player_' + this.direction + '_' + this.walkingStep;
+        this.walkingX = 0;
+        this.walkingY = 0;
     }
 
     spawn() {
@@ -13,17 +15,58 @@ class Player {
     }
 
     draw(context) {
-        context.drawImage(document.getElementById(this.sprite), this.x - 11, this.y - 13);
+        context.drawImage(document.getElementById(this.sprite), this.x - 3, this.y - 10);
     }
 
-    update() {
-        if (this.walking) {
+    collides(x, y, object) {
+        return !(
+            (x + 12 < object.x) ||
+            (x > object.x + 16) ||
+            (y + 12 < object.y) ||
+            (y > object.y + 16)
+        );
+    }
+
+    update(objects) {
+        if (this.walkingX || this.walkingY) {
             this.changeSprite = this.changeSprite - 1;
             if (this.changeSprite == 0) {
                 this.walkingStep = (this.walkingStep + 1) % 7;
                 this.changeSprite = 6;
             }
-            this.walking = false;
+
+            let x = this.x + this.walkingX,
+                y = this.y + this.walkingY,
+                collisionX = false,
+                collisionY = false;
+            
+            if (this.walkingY > 0) this.direction = 'down';
+            else if (this.walkingY < 0) this.direction = 'up';
+            if (this.walkingX > 0) this.direction = 'right';
+            else if (this.walkingX < 0) this.direction = 'left';
+
+            for (let object of objects) {
+                if (this.walkingY != 0 && this.collides(this.x, y, object)) {
+                    this.walkingY = 0;
+                    y = this.y;
+                    this.collisionY = true;
+                }
+                if (this.walkingX != 0 && this.collides(x, this.y, object)) {
+                    this.walkingX = 0;
+                    x = this.x;
+                    this.collisionX = true;
+                }
+            }
+
+            if (!collisionX) {
+                this.x = x;
+            }
+            if (!collisionY) {
+                 this.y = y;
+            }
+            
+            this.walkingX = 0;
+            this.walkingY = 0;
         } else {
             this.walkingStep = 0;
             this.changeSprite = 1;
@@ -32,37 +75,20 @@ class Player {
         return true;
     }
 
-    walk(dir) {
-        this.walking = true;
-        this.direction = dir;
-        if (dir === 'down') {
-            this.y = this.y + 1;
-        }
-        if (dir === 'up') {
-            this.y = this.y - 1;
-        }
-        if (dir === 'right') {
-            this.x = this.x + 1;
-        }
-        if (dir === 'left') {
-            this.x = this.x - 1;
-        }
-    }
-
     down() {
-        this.walk('down');
+        this.walkingY = 1;
     }
 
     up() {
-        this.walk('up');
+        this.walkingY = -1;
     }
 
     left() {
-        this.walk('left');
+        this.walkingX = -1;
     }
 
     right() {
-        this.walk('right');
+        this.walkingX = 1;
     }
 }
 
