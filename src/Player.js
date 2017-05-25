@@ -20,7 +20,7 @@ class Player {
         if (this.walking) {
             this.changeSprite = this.changeSprite - 1;
             if (this.changeSprite == 0) {
-                this.walkingStep = (this.walkingStep + 1) % 6;
+                this.walkingStep = (this.walkingStep + 1) % 7;
                 this.changeSprite = 6;
             }
             this.walking = false;
