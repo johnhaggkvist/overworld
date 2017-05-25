@@ -1,6 +1,7 @@
 import Music from './Music';
 import Text from './Text';
 import Logo from './Logo';
+import WorldMap from './WorldMap';
 import Controller from './Controller';
 import Player from './Player';
 import './Game.css';
@@ -42,7 +43,7 @@ class Game {
     this.scene = this.SCENE.GAME;
     //this.music.play("overworld");
     this.player = new Player(this.width / 2, this.height / 2);
-    this.addObject(this.player);
+    this.map = new WorldMap();
   }
 
   loading() {
@@ -96,6 +97,9 @@ class Game {
       }
     }
 
+    if (this.map) this.map.update();
+    if (this.player) this.player.update();
+
     for (let object of this.objects) {
       if (!object.update()) {
         this.objects.splice(this.objects.indexOf(object), 1);
@@ -105,6 +109,10 @@ class Game {
 
   draw() {
     this.context.clearRect(0, 0, this.width, this.height);
+
+    if (this.map) this.map.draw(this.context);
+    if (this.player) this.player.draw(this.context);
+
     for (let object of this.objects) {
       object.draw(this.context);
     }
