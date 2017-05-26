@@ -2,10 +2,12 @@ class Bush {
    constructor(x, y) {
        this.x = x;
        this.y = y;
+       this.width = 16;
+       this.height = 16;
    }
 
    spawn() {
-       
+
    }
 
    update() {

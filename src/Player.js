@@ -2,6 +2,8 @@ class Player {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.width = 8;
+        this.height = this.width;
         this.changeSprite = 1;
         this.walkingStep = 0;
         this.direction = 'down';
@@ -15,15 +17,16 @@ class Player {
     }
 
     draw(context) {
-        context.drawImage(document.getElementById(this.sprite), this.x - 3, this.y - 10);
+        // TODO: Circle hitbox?
+        context.drawImage(document.getElementById(this.sprite), this.x - (22 - this.width) / 2, this.y - 6 - (22 - this.height) / 2);
     }
 
-    collides(x, y, object) {
+    collides(x, y, object) {        
         return !(
-            (x + 12 < object.x) ||
-            (x > object.x + 16) ||
-            (y + 12 < object.y) ||
-            (y > object.y + 16)
+            (x + this.width < object.x) ||
+            (x > object.x + object.width) ||
+            (y + this.height < object.y) ||
+            (y > object.y + object.height)
         );
     }
 
