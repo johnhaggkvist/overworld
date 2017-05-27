@@ -86,15 +86,19 @@ class Game {
     if (this.scene === this.SCENE.INTRO && (this.controller.space() || this.controller.enter())) {
       this.game();
     } else if (this.scene === this.SCENE.GAME) {
-      if (this.controller.down()) {
-        this.player.down();
-      } else if (this.controller.up()) {
-        this.player.up();
-      }
-      if (this.controller.right()) {
-        this.player.right();
-      } else if (this.controller.left()) {
-        this.player.left();
+      if (this.controller.space() && !this.player.swingingSword) {
+        this.player.use();
+      } else {
+        if (this.controller.down()) {
+         this.player.down();
+        } else if (this.controller.up()) {
+          this.player.up();
+        }
+        if (this.controller.right()) {
+         this.player.right();
+        } else if (this.controller.left()) {
+         this.player.left();
+        }
       }
     }
 

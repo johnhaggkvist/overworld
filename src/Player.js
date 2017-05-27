@@ -16,12 +16,20 @@ class Player {
 
     }
 
-    draw(context) {
-        // TODO: Circle hitbox?
-        context.drawImage(document.getElementById(this.sprite), this.x - (22 - this.width) / 2, this.y - 6 - (22 - this.height) / 2);
+    use() {
+        this.swingingSword = true;
+        this.swordSwing = 5;
     }
 
-    collides(x, y, object) {        
+    draw(context) {
+        // TODO: Circle hitbox?
+        let sprite = document.getElementById(this.sprite),
+            xOffset = sprite.dataset.x | 0,
+            yOffset = sprite.dataset.y | 0;
+        context.drawImage(sprite, this.x - (22 - this.width) / 2 + xOffset, this.y - 6 - (22 - this.height) / 2) + yOffset;
+    }
+
+    collides(x, y, object) {
         return !(
             (x + this.width < object.x) ||
             (x > object.x + object.width) ||
@@ -31,7 +39,16 @@ class Player {
     }
 
     update(objects) {
-        if (this.walkingX || this.walkingY) {
+        console.log(this.swingingSword, this.swordSwing);
+        let sprite = undefined;
+        if (this.swingingSword) {
+            sprite = 'sword_down_' + Number.parseInt(Math.abs(5 - Math.ceil(this.swordSwing)), 10);
+            this.swordSwing = this.swordSwing - 0.25;
+            if (this.swordSwing <= 0) {
+                this.swingingSword = false;
+            }
+            console.log(sprite, this.swordSwing);
+        } else if (this.walkingX || this.walkingY) {
             this.changeSprite = this.changeSprite - 1;
             if (this.changeSprite == 0) {
                 this.walkingStep = (this.walkingStep + 1) % 7;
@@ -74,7 +91,10 @@ class Player {
             this.walkingStep = 0;
             this.changeSprite = 1;
         }
-        this.sprite = 'player_' + this.direction + '_' + this.walkingStep;
+        if (sprite === undefined) {
+            sprite = 'player_' + this.direction + '_' + this.walkingStep;
+        }
+        this.sprite = sprite;
         return true;
     }
 
