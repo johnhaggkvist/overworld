@@ -31,17 +31,42 @@ class Player {
     }
 
     collides(x, y, object) {
+        return this._collides(x, y, this.width, this.height, object);
+    }
+
+    _collides(x, y, width, height, object) {
         return !(
-            (x + this.width < object.x) ||
+            (x + width < object.x) ||
             (x > object.x + object.width) ||
-            (y + this.height < object.y) ||
+            (y + height < object.y) ||
             (y > object.y + object.height)
         );
+    }
+
+    _damage(objects) {
+        let swingSize = 16;
+        for (let object of objects) {
+            if (typeof object.damage === "function") {
+                if (this.direction === 'down' && this._collides(this.x, this.y, this.width, this.height + swingSize, object)) {
+                    object.damage();
+                } else if (this.direction === 'up' && this._collides(this.x, this.y - swingSize, this.width, this.height + swingSize, object)) {
+                    object.damage();
+                } else if (this.direction === 'right' && this._collides(this.x, this.y, this.width + swingSize, this.height, object)) {
+                    object.damage();
+                } else if (this.direction === 'left' && this._collides(this.x  - swingSize, this.y, this.width + swingSize, this.height, object)) {
+                    object.damage();
+                }
+            }  
+        }
     }
 
     update(objects) {
         let sprite = undefined;
         if (this.swingingSword) {
+            if (this.swordSwing === 5) {
+                this._damage(objects);
+            }
+
             sprite = 'sword_' + this.direction + '_' + Number.parseInt(Math.abs(5 - Math.ceil(this.swordSwing)), 10);
             this.swordSwing = this.swordSwing - 0.25;
             if (this.swordSwing <= 0) {
