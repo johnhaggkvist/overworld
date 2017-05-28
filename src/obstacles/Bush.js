@@ -8,8 +8,11 @@ class Bush {
        this.height = 16;
        this.alive = true;
        this.timeToLive = 10;
-       console.log(this.x);
-       this.leaves = [new Leaf(this.x, this.y), new Leaf(this.x, this.y), new Leaf(this.x, this.y)];
+       this.leaves = [this._leaf(), this._leaf(), this._leaf(), this._leaf(), this._leaf()];
+   }
+
+   _leaf() {
+       return new Leaf(this.x + this.width / 2, this.y);
    }
 
    spawn() {
@@ -21,7 +24,6 @@ class Bush {
            for (let leaf of this.leaves) {
                leaf.update();
            }
-           console.log(this.timeToLive);
            if (this.timeToLive-- <= 0) {
                return false;
            }
