@@ -40,7 +40,6 @@ class Player {
     }
 
     update(objects) {
-        console.log(this.swingingSword, this.swordSwing);
         let sprite = undefined;
         if (this.swingingSword) {
             sprite = 'sword_' + this.direction + '_' + Number.parseInt(Math.abs(5 - Math.ceil(this.swordSwing)), 10);
