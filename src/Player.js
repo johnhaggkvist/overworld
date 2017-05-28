@@ -26,7 +26,8 @@ class Player {
         let sprite = document.getElementById(this.sprite),
             xOffset = sprite.dataset.x | 0,
             yOffset = sprite.dataset.y | 0;
-        context.drawImage(sprite, this.x - (22 - this.width) / 2 + xOffset, this.y - 6 - (22 - this.height) / 2) + yOffset;
+
+        context.drawImage(sprite, this.x - (22 - this.width) / 2 + xOffset, this.y - 6 - (22 - this.height) / 2 + yOffset);
     }
 
     collides(x, y, object) {
@@ -42,7 +43,7 @@ class Player {
         console.log(this.swingingSword, this.swordSwing);
         let sprite = undefined;
         if (this.swingingSword) {
-            sprite = 'sword_down_' + Number.parseInt(Math.abs(5 - Math.ceil(this.swordSwing)), 10);
+            sprite = 'sword_' + this.direction + '_' + Number.parseInt(Math.abs(5 - Math.ceil(this.swordSwing)), 10);
             this.swordSwing = this.swordSwing - 0.25;
             if (this.swordSwing <= 0) {
                 this.swingingSword = false;
