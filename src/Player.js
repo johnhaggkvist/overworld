@@ -47,10 +47,9 @@ class Player {
             if (this.swordSwing <= 0) {
                 this.swingingSword = false;
             }
-            console.log(sprite, this.swordSwing);
         } else if (this.walkingX || this.walkingY) {
             this.changeSprite = this.changeSprite - 1;
-            if (this.changeSprite == 0) {
+            if (this.changeSprite === 0) {
                 this.walkingStep = (this.walkingStep + 1) % 7;
                 this.changeSprite = 6;
             }
@@ -66,12 +65,12 @@ class Player {
             else if (this.walkingX < 0) this.direction = 'left';
 
             for (let object of objects) {
-                if (this.walkingY != 0 && this.collides(this.x, y, object)) {
+                if (this.walkingY !== 0 && this.collides(this.x, y, object)) {
                     this.walkingY = 0;
                     y = this.y;
                     this.collisionY = true;
                 }
-                if (this.walkingX != 0 && this.collides(x, this.y, object)) {
+                if (this.walkingX !== 0 && this.collides(x, this.y, object)) {
                     this.walkingX = 0;
                     x = this.x;
                     this.collisionX = true;

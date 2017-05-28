@@ -1,5 +1,5 @@
 import Music from './Music';
-import Text from './Text';
+//import Text from './Text';
 import Logo from './Logo';
 import WorldMap from './WorldMap';
 import Controller from './Controller';

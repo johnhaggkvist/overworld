@@ -15,9 +15,9 @@ class WorldMap {
         for (var i = 0; i < this.width; i++) {
             this.map.push([]);
             for (var j = 0; j < this.height; j++) {
-                let sprite = this.sprites[Number.parseInt(Math.round(Math.random() * (this.sprites.length - 1)))];
+                let sprite = this.sprites[Number.parseInt(Math.round(Math.random() * (this.sprites.length - 1)), 10)];
                 this.map[i].push(sprite);
-                if (sprite == 'bush_1' && !((i == 7 || i == 8) && (j == 4 || j == 5))) {
+                if (sprite === 'bush_1' && !((i === 7 || i === 8) && (j === 4 || j === 5))) {
                     this.objects.push(new Bush(i*16, j*16));
                 }
             }
