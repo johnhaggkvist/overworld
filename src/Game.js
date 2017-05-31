@@ -14,7 +14,7 @@ class Game {
   }
 
   constructor(canvasId) {
-    this.sound = new Sound(0.5, 0.5);
+    this.sound = Sound.instance;
 
     this.canvas = document.getElementById(canvasId);
     this.width = this.canvas.width;

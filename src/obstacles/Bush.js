@@ -1,4 +1,5 @@
 import Leaf from './Leaf';
+import Sound from '../Sound';
 
 class Bush {
    constructor(x, y) {
@@ -33,6 +34,7 @@ class Bush {
 
    damage() {
        this.alive = false;
+       Sound.instance.playSound('bush');
    }
 
    draw(context) {

@@ -1,7 +1,6 @@
 class Sound {
-    constructor(volume, musicVolume) {
+    constructor(volume) {
         this.volume = volume | 1;
-        this.musicVolume = musicVolume | volume | 1;
 
         function loadSounds(sounds) {
             let loadedSounds = [];
@@ -18,6 +17,7 @@ class Sound {
         this.sounds = loadSounds(['intro', 'overworld', 'gameover',
             'sword', 'bush']);
 
+        // TODO: refactor into methods
         this.getSound = function(track) {
             for (let sound of this.sounds) {
                 if (sound.id === track) {
@@ -26,6 +26,15 @@ class Sound {
             }
             return undefined;
         }
+
+        this.setVolume = function(volume) {
+            this.volume = volume;
+            for (let sound of this.sounds) {
+                sound.volume = this.volume;
+            }
+        }
+
+        this.setVolume(this.volume);
 
         this.playMusic = function(track) {
             if (this.playing) {
@@ -45,9 +54,17 @@ class Sound {
             let sound = this.getSound(track);
 
             if (sound) {
+                sound.currentTime = 0;
                 sound.play();
             }
         }
+    }
+
+    static get instance() {
+        if (!this.soundInstance) {
+            this.soundInstance = new Sound();
+        }
+        return this.soundInstance;
     }
 }
 
