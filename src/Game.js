@@ -1,4 +1,4 @@
-import Music from './Music';
+import Sound from './Sound';
 //import Text from './Text';
 import Logo from './Logo';
 import WorldMap from './WorldMap';
@@ -14,7 +14,7 @@ class Game {
   }
 
   constructor(canvasId) {
-    this.music = new Music();
+    this.sound = new Sound(0.5, 0.5);
 
     this.canvas = document.getElementById(canvasId);
     this.width = this.canvas.width;
@@ -34,14 +34,14 @@ class Game {
     this.objects = [];
     this.addObject(new Logo());
     this.scene = this.SCENE.INTRO;
-    //this.music.play("intro");
+    this.sound.playMusic("intro");
     //this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
   }
 
   game() {
     this.objects = [];
     this.scene = this.SCENE.GAME;
-    //this.music.play("overworld");
+    this.sound.playMusic("overworld");
     this.player = new Player(this.width / 2, this.height / 2);
     this.map = new WorldMap();
     this.map.objects.forEach((object) => this.addObject(object));
@@ -88,6 +88,7 @@ class Game {
     } else if (this.scene === this.SCENE.GAME) {
       if (this.controller.space() && !this.player.swingingSword) {
         this.player.use();
+        this.sound.playSound("sword");
       } else {
         if (this.controller.down()) {
          this.player.down();
