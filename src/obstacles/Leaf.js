@@ -1,7 +1,7 @@
 class Leaf {
     constructor(x, y, id) {
-        this.x = x | 0;
-        this.y = y | 0;
+        this.x = x || 0;
+        this.y = y || 0;
         this.startY = this.y;
         this.step = 0;
         let maxSpread = 2;
@@ -13,8 +13,8 @@ class Leaf {
     
     }
 
-    draw(context) {
-        context.drawImage(document.getElementById(this.sprite), this.x , this.y);
+    draw(context, offset) {
+        context.drawImage(document.getElementById(this.sprite), this.x - offset.x, this.y - offset.y);
     }
 
     update() {

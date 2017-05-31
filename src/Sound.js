@@ -1,6 +1,6 @@
 class Sound {
-    constructor(volume) {
-        this.volume = volume | 1;
+    constructor(volume, musicVolume) {
+        this.volume = volume || 0.25;
 
         function loadSounds(sounds) {
             let loadedSounds = [];
@@ -46,7 +46,7 @@ class Sound {
             this.playing = this.getSound(track);
 
             if (this.playing) {
-                this.playing.play();
+                //this.playing.play();
             }
         }
 

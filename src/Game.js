@@ -42,8 +42,8 @@ class Game {
     this.objects = [];
     this.scene = this.SCENE.GAME;
     this.sound.playMusic("overworld");
-    this.player = new Player(this.width / 2, this.height / 2);
     this.map = new WorldMap();
+    this.player = new Player(this.map.start.x * 16 + 8, this.map.start.y * 16 + 8);
     this.map.objects.forEach((object) => this.addObject(object));
   }
 
@@ -114,15 +114,35 @@ class Game {
   }
 
   draw() {
+    let offset = this.offset();
     this.context.clearRect(0, 0, this.width, this.height);
 
-    if (this.map) this.map.draw(this.context);
+    if (this.map) this.map.draw(this.context, offset);
 
     for (let object of this.objects) {
-      object.draw(this.context);
+      object.draw(this.context, offset);
     }
 
-    if (this.player) this.player.draw(this.context);
+    if (this.player) this.player.draw(this.context, offset);
+  }
+
+  offset() {
+    if (this.player) {
+      let x = this.player.x - this.width / 2,
+          y = this.player.y - this.height / 2;
+      if (x < 0) x = 0;
+      else if (x > this.map.width * 16 - this.width) x = this.map.width * 16 - this.width;
+      if (y < 0) y = 0;
+      else if (y > this.map.height * 16 - this.height) y = this.map.height * 16 - this.height;
+      return {
+        x: x,
+        y: y
+      };
+    }
+    return {
+      x: 0,
+      y: 0
+    };
   }
 }
 

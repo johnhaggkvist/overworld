@@ -37,12 +37,12 @@ class Bush {
        Sound.instance.playSound('bush');
    }
 
-   draw(context) {
+   draw(context, offset) {
        if (this.alive) {
-           context.drawImage(document.getElementById("bush_0"), this.x, this.y);
+           context.drawImage(document.getElementById("bush_0"), this.x - offset.x, this.y - offset.y);
        } else {
            for (let leaf of this.leaves) {
-               leaf.draw(context);
+               leaf.draw(context, offset);
            }
        }
    }

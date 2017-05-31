@@ -9,7 +9,7 @@ class Player {
         this.direction = 'down';
         this.sprite = 'player_' + this.direction + '_' + this.walkingStep;
         this.walkingX = 0;
-        this.walkingY = 0;
+        this.walkingY = 0; 
     }
 
     spawn() {
@@ -21,14 +21,26 @@ class Player {
         this.swordSwing = 5;
     }
 
-    draw(context) {
+    hitbox() {
+        return {
+            x: this.x - this.width / 2,
+            y: this.y - this.height / 2
+        };
+    }
+
+    draw(context, offset) {
         // TODO: Circle hitbox?
         let sprite = document.getElementById(this.sprite),
-            xOffset = sprite.dataset.x | 0,
-            yOffset = sprite.dataset.y | 0;
+            xOffset = (sprite.dataset.x || 0) - offset.x,
+            yOffset = (sprite.dataset.y || 0) - offset.y;
 
-        context.drawImage(sprite, this.x - (22 - this.width) / 2 + xOffset, this.y - 6 - (22 - this.height) / 2 + yOffset);
-    }
+        context.drawImage(sprite, this.hitbox().x - (22 - this.width) / 2 + xOffset, this.hitbox().y - 6 - (22 - this.height) / 2 + yOffset);
+        
+        if (this.debug) {
+            context.strokeStyle = 'red';
+            context.strokeRect(this.hitbox().x - offset.x, this.hitbox().y - offset.y, this.width, this.width);
+        }
+}
 
     collides(x, y, object) {
         return this._collides(x, y, this.width, this.height, object);
@@ -36,10 +48,10 @@ class Player {
 
     _collides(x, y, width, height, object) {
         return !(
-            (x + width < object.x) ||
-            (x > object.x + object.width) ||
-            (y + height < object.y) ||
-            (y > object.y + object.height)
+            (x + width / 2 < object.x) ||
+            (x - width / 2 > object.x + object.width) ||
+            (y + height / 2 < object.y) ||
+            (y - height / 2 > object.y + object.height)
         );
     }
 
