@@ -55,6 +55,7 @@ class Player {
         );
     }
 
+    // TODO: fix swingsize left and up
     _damage(objects) {
         let swingSize = 16;
         for (let object of objects) {
@@ -65,7 +66,7 @@ class Player {
                     object.damage();
                 } else if (this.direction === 'right' && this._collides(this.x, this.y, this.width + swingSize, this.height, object)) {
                     object.damage();
-                } else if (this.direction === 'left' && this._collides(this.x  - swingSize, this.y, this.width + swingSize, this.height, object)) {
+                } else if (this.direction === 'left' && this._collides(this.x - swingSize, this.y, this.width + swingSize, this.height, object)) {
                     object.damage();
                 }
             }  
