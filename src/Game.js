@@ -87,7 +87,7 @@ class Game {
       this.game();
     } else if (this.scene === this.SCENE.GAME) {
       if (this.controller.space() && !this.player.swingingSword) {
-        this.player.use();
+        this.player.use(this.context);
         this.sound.playSound("sword");
       } else {
         if (this.controller.down()) {

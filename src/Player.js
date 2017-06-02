@@ -39,6 +39,10 @@ class Player {
         if (this.debug) {
             context.strokeStyle = 'red';
             context.strokeRect(this.hitbox().x - offset.x, this.hitbox().y - offset.y, this.width, this.width);
+        
+            if (this.swingingSword) {
+                context.strokeRect(this.swordBox.x - offset.x, this.swordBox.y - offset.y, this.swordBox.width, this.swordBox.height);
+            }
         }
 }
 
@@ -52,21 +56,46 @@ class Player {
             (x - width / 2 > object.x + object.width) ||
             (y + height / 2 < object.y) ||
             (y - height / 2 > object.y + object.height)
-        );
+        ); 
     }
 
-    // TODO: fix swingsize left and up
+    _swordBox(direction) {
+        let hitbox = this.hitbox();
+        let swingSize = 16; // TODO: Breaks if not 16, maybe fix
+
+        let swordBox = {
+            x: hitbox.x,
+            y: hitbox.y,
+            width: swingSize,
+            height: swingSize
+        };
+    
+        if (this.direction === 'down') {
+            swordBox.y += this.height;
+            swordBox.x -= this.width / 2;
+        } else if (this.direction === 'up') {
+            swordBox.y -= swingSize;
+            swordBox.x -= this.width / 2;
+        } else if (this.direction === 'right') {
+            swordBox.x += this.width;
+            swordBox.y -= this.height / 2;
+        } else if (this.direction === 'left') {
+            swordBox.x -= swingSize;
+            swordBox.y -= this.height / 2;
+        }
+
+        swordBox.centerX = swordBox.x + swingSize / 2;
+        swordBox.centerY = swordBox.y + swingSize / 2;
+
+        return swordBox;
+    }
+
     _damage(objects) {
-        let swingSize = 16;
+        this.swordBox = this._swordBox(this.direction);
+        let swordBox = this.swordBox;
         for (let object of objects) {
             if (typeof object.damage === "function") {
-                if (this.direction === 'down' && this._collides(this.x, this.y, this.width, this.height + swingSize, object)) {
-                    object.damage();
-                } else if (this.direction === 'up' && this._collides(this.x, this.y - swingSize, this.width, this.height + swingSize, object)) {
-                    object.damage();
-                } else if (this.direction === 'right' && this._collides(this.x, this.y, this.width + swingSize, this.height, object)) {
-                    object.damage();
-                } else if (this.direction === 'left' && this._collides(this.x - swingSize, this.y, this.width + swingSize, this.height, object)) {
+                if (this._collides(swordBox.centerX, swordBox.centerY, swordBox.width, swordBox.height, object)) {
                     object.damage();
                 }
             }  
