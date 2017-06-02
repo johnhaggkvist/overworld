@@ -10,8 +10,8 @@ class WorldMap {
         this.objects = [];
 
         this.start = {
-            x: 1 + Number.parseInt(Math.ceil(Math.random() * this.width) - 3, 10),
-            y: 1 + Number.parseInt(Math.ceil(Math.random() * this.height) - 3, 10)
+            x: 2 + Number.parseInt(Math.ceil(Math.random() * this.width) - 5, 10),
+            y: 2 + Number.parseInt(Math.ceil(Math.random() * this.height) - 5, 10)
         };
 
         let sprites = [
@@ -23,10 +23,12 @@ class WorldMap {
         // Generation
         for (let x = 0; x < this.width; x++) {
             this.map.push([]);
-            for (var y = 0; y < this.height; y++) {
+            for (let y = 0; y < this.height; y++) {
                 let type = 'start';
                 if (!(x === this.start.x && y === this.start.y)) {
                     if (x === 0 || x === this.width-1 || y === 0 || y === this.height-1) {
+                        type = 'border';
+                    } else if (Math.random() > 0.2 && (x === 1 || x === this.width-2 || y === 1 || y === this.height-2)) {
                         type = 'border';
                     } else {
                         type = 'grass';
@@ -41,11 +43,11 @@ class WorldMap {
         // Painting
         for (let x = 0; x < this.width; x++) {
             this.map.push([]);
-            for (var y = 0; y < this.height; y++) {
+            for (let y = 0; y < this.height; y++) {
                 let cell = this.map[x][y];
 
                 if (cell.type === 'border') {
-                    cell.sprite = 'rock';
+                    cell.sprite = WorldMap._getBorderBlock(this.map, x, y);
                 } else if (cell.type === 'start') {
                     cell.sprite = 'tiles';
                 }  else {
@@ -61,12 +63,65 @@ class WorldMap {
                 if (cell.sprite === 'bush_1') {
                     this.objects.push(new Bush(x * 16, y * 16));
                 }
-                if (cell.sprite === 'rock') {
+                if (cell.type === 'border') {
                     this.objects.push(new Border(x * 16, y * 16));
                 }
             }
         }
+    }
 
+    static _getBorderBlock(map, x, y) {
+        let south = WorldMap._isBorder(map, x, y + 1),
+            north = WorldMap._isBorder(map, x, y - 1),
+            east = WorldMap._isBorder(map, x + 1, y),
+            west = WorldMap._isBorder(map, x - 1, y),
+            southwest = WorldMap._isBorder(map, x - 1, y + 1),
+            southeast = WorldMap._isBorder(map, x + 1, y + 1),
+            northwest = WorldMap._isBorder(map, x - 1, y - 1),
+            northeast = WorldMap._isBorder(map, x + 1, y - 1);
+
+        if (north && south && west && !east) {
+            return 'border_east';
+        } else if (north && south && !west && east) {
+            return 'border_west';
+        } else if (north && !south && west && east) {
+            return 'border_south';
+        } else if (!north && south && west && east) {
+            return 'border_north';
+        } else if (north && !south && !west && east) {
+            return 'border_southwest';
+        } else if (north && !south && west && !east) {
+            return 'border_southeast';
+        } else if (!north && south && !west && east) {
+            return 'border_northwest';
+        } else if (!north && south && west && !east) {
+            return 'border_northeast';
+        } else if (north && south && west && east) {
+            if (northeast && northwest && southeast && !southwest) {
+                return 'border_inner_southwest';
+            } else if (northeast && northwest && !southeast && southwest) {
+                return 'border_inner_southeast';
+            } else if (northeast && !northwest && southeast && southwest) {
+                return 'border_inner_northwest';
+            } else if (!northeast && northwest && southeast && southwest) {
+                return 'border_inner_northeast';
+            } else if (northeast && northwest && southeast && southwest) {
+                return 'border_full';
+            } else if (northeast && northwest && !southeast && !southwest) {
+                return 'border_south';
+            } else if (northeast && !northwest && southeast && !southwest) {
+                return 'border_west';
+            } else if (!northeast && northwest && !southeast && southwest) {
+                return 'border_east';
+            } else if (!northeast && !northwest && southeast && southwest) {
+                return 'border_north';
+            }
+        }
+        return 'rock';
+    }
+
+    static _isBorder(map, x, y) {
+        return !map[x] || !map[x][y] || map[x][y].type === 'border';
     }
 
     spawn() {
