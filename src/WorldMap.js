@@ -10,8 +10,8 @@ class WorldMap {
         this.objects = [];
 
         this.start = {
-            x: 2 + Number.parseInt(Math.ceil(Math.random() * this.width) - 5, 10),
-            y: 2 + Number.parseInt(Math.ceil(Math.random() * this.height) - 5, 10)
+            x: 2 + Number.parseInt(Math.ceil(Math.random() * (this.width - 5)), 10),
+            y: 2 + Number.parseInt(Math.ceil(Math.random() * (this.height - 5)), 10)
         };
 
         let sprites = [
