@@ -9,11 +9,6 @@ class WorldMap {
         this.map = [];
         this.objects = [];
 
-        this.start = {
-            x: 2 + Number.parseInt(Math.ceil(Math.random() * (this.width - 5)), 10),
-            y: 2 + Number.parseInt(Math.ceil(Math.random() * (this.height - 5)), 10)
-        };
-
         let sprites = [
             "grass_0","grass_0","grass_0","grass_0",
             "grass_1",
@@ -21,34 +16,22 @@ class WorldMap {
         ];
 
         // Generation
-        for (let x = 0; x < this.width; x++) {
-            this.map.push([]);
-            for (let y = 0; y < this.height; y++) {
-                let type = 'start';
-                if (!(x === this.start.x && y === this.start.y)) {
-                    if (x === 0 || x === this.width-1 || y === 0 || y === this.height-1) {
-                        type = 'border';
-                    } else if (Math.random() > 0.2 && (x === 1 || x === this.width-2 || y === 1 || y === this.height-2)) {
-                        type = 'border';
-                    } else {
-                        type = 'grass';
-                    }
-                }
-                this.map[x].push({
-                    type: type
-                });
-            }
-        }
+        this.map = WorldMap._generateMap(this.width, this.height);
 
         // Painting
         for (let x = 0; x < this.width; x++) {
-            this.map.push([]);
             for (let y = 0; y < this.height; y++) {
                 let cell = this.map[x][y];
 
-                if (cell.type === 'border') {
+                if (cell.type === 'end') {
+                    cell.sprite = 'tiles';
+                } else if (cell.type === 'border') {
                     cell.sprite = WorldMap._getBorderBlock(this.map, x, y);
                 } else if (cell.type === 'start') {
+                    this.start = {
+                        x: x,
+                        y: y
+                    };
                     cell.sprite = 'tiles';
                 }  else {
                     cell.sprite = sprites[Number.parseInt(Math.round(Math.random() * (sprites.length - 1)), 10)];
@@ -68,6 +51,113 @@ class WorldMap {
                 }
             }
         }
+    }
+
+    static _getEnd(width, height) {
+        let fiftyFifty = () => Math.random() >= 0.5,
+            placeOnX = fiftyFifty(),
+            x = placeOnX 
+                ? 3 + Math.floor(Math.random() * (width - 6)) 
+                : fiftyFifty() ? 0 : width - 1,
+            y = !placeOnX 
+                ? 3 + Math.floor(Math.random() * (height - 6))
+                : fiftyFifty() ? 0 : height - 1;
+        return [
+            {
+                x: x,
+                y: y
+            },
+            {
+                x: x + (placeOnX ? (fiftyFifty() ? -1 : 1) : 0) * 1,
+                y: y + (!placeOnX ? (fiftyFifty() ? -1 : 1) : 0) * 1,
+            }];
+    }
+
+    static _borderPercentace(map) {
+        let cells = 0,
+            borders = 0;
+        for (let x = 0; x < map.length; x++) {
+            for (let y = 0; y < map[x].length; y++) {
+                cells += 1;
+                if (map[x][y].type === 'border') borders += 1;
+            }
+        }
+        return borders / cells;
+    }
+
+    static _generateMap(width, height) {
+        let map = [];
+
+        for (let x = 0; x < width; x++) {
+            map.push([]);
+            for (let y = 0; y < height; y++) {
+                map[x].push({
+                    type: 'border'
+                });
+            }
+        }
+        let end = WorldMap._getEnd(width, height);
+        for (let endPos of end) {
+            map[endPos.x][endPos.y].type = 'end';
+        }
+
+        let drunkWalk = (pos) => {
+            let directions = [{x: -1, y: 0}, {x: 1, y: 0}, {x: 0, y: -1}, {x: 0, y: 1}],
+                walk = directions[Math.floor(Math.random() * directions.length)],
+                newPos = {
+                    x: pos.x + walk.x,
+                    y: pos.y + walk.y
+            };
+
+            if (newPos.x > 0 && newPos.x < width - 1 && newPos.y > 0 && newPos.y < height - 1) {
+                map[newPos.x][newPos.y].type = 'grass';
+                return newPos;
+            }
+            return pos;
+        };
+        let pos = drunkWalk(end[0]);
+        while (WorldMap._borderPercentace(map) > 0.5) {
+            pos = drunkWalk(pos);
+        }
+
+        let start = function findStart(pos) {
+            let directions = [{x: -1, y: 0}, {x: 1, y: 0}, {x: 0, y: -1}, {x: 0, y: 1}],
+                walk = directions[Math.floor(Math.random() * directions.length)],
+                newPos = {
+                    x: pos.x + walk.x,
+                    y: pos.y + walk.y
+            };
+
+            if (newPos.x > 0 && newPos.x < width - 1 && newPos.y > 0 && newPos.y < height - 1) {
+                pos = newPos;
+                if (map[pos.x][pos.y].type === 'grass') {
+                    map[pos.x][pos.y].type = 'start';
+                    return pos;
+                }
+            }
+            return findStart(pos);
+        };
+        let startPos = start({x: width / 2, y: height / 2});
+
+        /*for (let x = 0; x < width; x++) {
+            map.push([]);
+            for (let y = 0; y < height; y++) {
+                let type = 'start';
+                //if (!(x === this.start.x && y === this.start.y)) {
+                    if (x === 0 || x === width-1 || y === 0 || y === height-1) {
+                        type = 'border';
+                    } else if (Math.random() > 0.2 && (x === 1 || x === width-2 || y === 1 || y === height-2)) {
+                        type = 'border';
+                    } else {
+                        type = 'grass';
+                    }
+                //}
+                map[x].push({
+                    type: type
+                });
+            }
+        }*/
+        return map;
     }
 
     static _getBorderBlock(map, x, y) {
