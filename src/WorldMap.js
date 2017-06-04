@@ -3,8 +3,8 @@ import Border from './obstacles/Border';
 
 class WorldMap {
     constructor() {
-        this.width = 30;
-        this.height = 20;
+        this.width = 100;
+        this.height = 60;
 
         this.map = [];
         this.objects = [];
@@ -102,21 +102,31 @@ class WorldMap {
         }
 
         let drunkWalk = (pos) => {
-            let directions = [{x: -1, y: 0}, {x: 1, y: 0}, {x: 0, y: -1}, {x: 0, y: 1}],
-                walk = directions[Math.floor(Math.random() * directions.length)],
+            let directions = [];
+            for (let direction of [{x: -1, y: 0}, {x: 1, y: 0}, {x: 0, y: -1}, {x: 0, y: 1}]) {
+                let checkPos = {
+                    x: pos.x + direction.x,
+                    y: pos.y + direction.y
+                };
+                if (checkPos.x > 0 && checkPos.x < width - 1 && checkPos.y > 0 && checkPos.y < height - 1) {
+                    directions.push(direction);
+                    if (map[checkPos.x][checkPos.y].type === 'border') {
+                        directions.push(direction);
+                    }
+                }
+            }
+
+            let walk = directions[Math.floor(Math.random() * directions.length)],
                 newPos = {
                     x: pos.x + walk.x,
                     y: pos.y + walk.y
             };
 
-            if (newPos.x > 0 && newPos.x < width - 1 && newPos.y > 0 && newPos.y < height - 1) {
-                map[newPos.x][newPos.y].type = 'grass';
-                return newPos;
-            }
-            return pos;
+            map[newPos.x][newPos.y].type = 'grass';
+            return newPos;
         };
         let pos = drunkWalk(end[0]);
-        while (WorldMap._borderPercentace(map) > 0.5) {
+        while (WorldMap._borderPercentace(map) > 0.6) {
             pos = drunkWalk(pos);
         }
 
@@ -137,26 +147,7 @@ class WorldMap {
             }
             return findStart(pos);
         };
-        let startPos = start({x: width / 2, y: height / 2});
-
-        /*for (let x = 0; x < width; x++) {
-            map.push([]);
-            for (let y = 0; y < height; y++) {
-                let type = 'start';
-                //if (!(x === this.start.x && y === this.start.y)) {
-                    if (x === 0 || x === width-1 || y === 0 || y === height-1) {
-                        type = 'border';
-                    } else if (Math.random() > 0.2 && (x === 1 || x === width-2 || y === 1 || y === height-2)) {
-                        type = 'border';
-                    } else {
-                        type = 'grass';
-                    }
-                //}
-                map[x].push({
-                    type: type
-                });
-            }
-        }*/
+        start({x: width / 2, y: height / 2});
         return map;
     }
 
@@ -189,8 +180,13 @@ class WorldMap {
                 return 'border_east';
             } else if (!northeast && !northwest && southeast && southwest) {
                 return 'border_north';
+            } else if (!northeast && northwest && southeast && !southwest) {
+                return 'border_northwest_southeast';
+            } else if (northeast && !northwest && !southeast && southwest) {
+                return 'border_northeast_southwest';
             }
-        } else if (north && south && west && !east && northwest && southwest) {
+        }
+        if (north && south && west && !east && northwest && southwest) {
             return 'border_east';
         } else if (north && south && !west && east && northeast && southeast) {
             return 'border_west';
@@ -198,13 +194,13 @@ class WorldMap {
             return 'border_south';
         } else if (!north && south && west && east && southeast && southwest) {
             return 'border_north';
-        } else if ((!south || !west) && north && east && northeast) {
+        } else if ((!south || !west || !southwest) && north && east && northeast) {
             return 'border_southwest';
-        } else if ((!south || !east) && north && west && northwest) {
+        } else if ((!south || !east || !southeast) && north && west && northwest) {
             return 'border_southeast';
-        } else if ((!north || !west) && south && east && southeast) {
+        } else if ((!north || !west || !northwest) && south && east && southeast) {
             return 'border_northwest';
-        } else if ((!north || !east) && south && west && southwest) {
+        } else if ((!north || !east || !northeast) && south && west && southwest) {
             return 'border_northeast';
         }
         return 'rock';
