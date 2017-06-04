@@ -170,23 +170,7 @@ class WorldMap {
             northwest = WorldMap._isBorder(map, x - 1, y - 1),
             northeast = WorldMap._isBorder(map, x + 1, y - 1);
 
-        if (north && south && west && !east) {
-            return 'border_east';
-        } else if (north && south && !west && east) {
-            return 'border_west';
-        } else if (north && !south && west && east) {
-            return 'border_south';
-        } else if (!north && south && west && east) {
-            return 'border_north';
-        } else if (north && !south && !west && east) {
-            return 'border_southwest';
-        } else if (north && !south && west && !east) {
-            return 'border_southeast';
-        } else if (!north && south && !west && east) {
-            return 'border_northwest';
-        } else if (!north && south && west && !east) {
-            return 'border_northeast';
-        } else if (north && south && west && east) {
+        if (north && south && west && east) {
             if (northeast && northwest && southeast && !southwest) {
                 return 'border_inner_southwest';
             } else if (northeast && northwest && !southeast && southwest) {
@@ -206,6 +190,22 @@ class WorldMap {
             } else if (!northeast && !northwest && southeast && southwest) {
                 return 'border_north';
             }
+        } else if (north && south && west && !east && northwest && southwest) {
+            return 'border_east';
+        } else if (north && south && !west && east && northeast && southeast) {
+            return 'border_west';
+        } else if (north && !south && west && east && northwest && northeast) {
+            return 'border_south';
+        } else if (!north && south && west && east && southeast && southwest) {
+            return 'border_north';
+        } else if ((!south || !west) && north && east && northeast) {
+            return 'border_southwest';
+        } else if ((!south || !east) && north && west && northwest) {
+            return 'border_southeast';
+        } else if ((!north || !west) && south && east && southeast) {
+            return 'border_northwest';
+        } else if ((!north || !east) && south && west && southwest) {
+            return 'border_northeast';
         }
         return 'rock';
     }
