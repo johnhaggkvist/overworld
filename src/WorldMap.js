@@ -39,6 +39,22 @@ class WorldMap {
             }
         }
 
+        // Treeification
+         for (let x = 0; x < this.width - 1; x++) {
+            for (let y = 0; y < this.height - 1; y++) {
+                if (this.map[x][y].sprite === 'border_northwest'
+                    && this.map[x + 1][y].sprite === 'border_northeast'
+                    && this.map[x][y + 1].sprite === 'border_southwest'
+                    && this.map[x + 1][y + 1].sprite === 'border_southeast') {
+                        let tile = Math.random() >= 0.5 ? 'tree' : 'stump';
+                        this.map[x][y].sprite = tile + '_northwest'
+                        this.map[x + 1][y].sprite = tile + '_northeast'
+                        this.map[x][y + 1].sprite = tile + '_southwest'
+                        this.map[x + 1][y + 1].sprite = tile + '_southeast'
+                } 
+            }
+        }
+
         // Objectification
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
