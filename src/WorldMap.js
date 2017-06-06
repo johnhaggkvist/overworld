@@ -40,20 +40,8 @@ class WorldMap {
         }
 
         // Treeification
-         for (let x = 0; x < this.width - 1; x++) {
-            for (let y = 0; y < this.height - 1; y++) {
-                if (this.map[x][y].sprite === 'border_northwest'
-                    && this.map[x + 1][y].sprite === 'border_northeast'
-                    && this.map[x][y + 1].sprite === 'border_southwest'
-                    && this.map[x + 1][y + 1].sprite === 'border_southeast') {
-                        let tile = Math.random() >= 0.5 ? 'tree' : 'stump';
-                        this.map[x][y].sprite = tile + '_northwest'
-                        this.map[x + 1][y].sprite = tile + '_northeast'
-                        this.map[x][y + 1].sprite = tile + '_southwest'
-                        this.map[x + 1][y + 1].sprite = tile + '_southeast'
-                } 
-            }
-        }
+        this._treefy();
+        this._poleify();
 
         // Objectification
         for (let x = 0; x < this.width; x++) {
@@ -69,8 +57,55 @@ class WorldMap {
         }
     }
 
+    _poleify() {
+        let isPole = (x, y) => this.map[x][y].sprite.indexOf('pole_') !== -1;
+        
+        for (let x = 0; x < this.width - 1; x++) {
+            for (let y = 0; y < this.height - 1; y++) {
+                if (isPole(x, y)) {
+                    let south = isPole(x, y + 1),
+                        north = isPole(x, y - 1),
+                        east = isPole(x + 1, y),
+                        west = isPole(x - 1, y);
+                    if (west && !east && !south) {
+                        this.map[x][y].sprite = 'pole_west';
+                    } else if (!west && east && !south) {
+                        this.map[x][y].sprite = 'pole_east';
+                    } else if (!west && !east && south) {
+                        this.map[x][y].sprite = 'pole_south';
+                    } else if (west && east && !south) {
+                        this.map[x][y].sprite = 'pole_east_west';
+                    } else if (!west && east && south) {
+                        this.map[x][y].sprite = 'pole_south_east';
+                    } else if (west && !east && south) {
+                        this.map[x][y].sprite = 'pole_south_west';
+                    } else if (west && east && south) {
+                        this.map[x][y].sprite = 'pole_south_east_west';
+                    }
+                }
+            }
+        }
+    }
+
+    _treefy() {
+        for (let x = 0; x < this.width - 1; x++) {
+            for (let y = 0; y < this.height - 1; y++) {
+                if (this.map[x][y].sprite === 'border_northwest'
+                    && this.map[x + 1][y].sprite === 'border_northeast'
+                    && this.map[x][y + 1].sprite === 'border_southwest'
+                    && this.map[x + 1][y + 1].sprite === 'border_southeast') {
+                        let tile = Math.random() >= 0.5 ? 'tree' : 'stump';
+                        this.map[x][y].sprite = tile + '_northwest'
+                        this.map[x + 1][y].sprite = tile + '_northeast'
+                        this.map[x][y + 1].sprite = tile + '_southwest'
+                        this.map[x + 1][y + 1].sprite = tile + '_southeast'
+                } 
+            }
+        }
+    }
+
     static _getEnd(width, height) {
-        let fiftyFifty = () => Math.random() >= 0.5,
+        let fiftyFifty = () => Math.random() >= 0.6,
             placeOnX = fiftyFifty(),
             x = placeOnX 
                 ? 3 + Math.floor(Math.random() * (width - 6)) 
@@ -219,7 +254,7 @@ class WorldMap {
         } else if ((!north || !east || !northeast) && south && west && southwest) {
             return 'border_northeast';
         }
-        return 'rock';
+        return 'pole_alone';
     }
 
     static _isBorder(map, x, y) {
