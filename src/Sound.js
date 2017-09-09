@@ -46,7 +46,7 @@ class Sound {
             this.playing = this.getSound(track);
 
             if (this.playing) {
-                //this.playing.play();
+                this.playing.play();
             }
         }
 
