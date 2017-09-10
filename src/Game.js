@@ -1,5 +1,4 @@
 import Sound from './Sound';
-//import Text from './Text';
 import Logo from './Logo';
 import WorldMap from './WorldMap';
 import Controller from './Controller';
@@ -35,7 +34,6 @@ class Game {
     this.addObject(new Logo());
     this.scene = this.SCENE.INTRO;
     this.sound.playMusic("intro");
-    //this.canvas.addEventListener("click", ev => this.addObject(new Text(Number.parseInt(Math.random()*10, 10), ev.offsetX, ev.offsetY)));
   }
 
   game() {
@@ -127,21 +125,27 @@ class Game {
   }
 
   offset() {
+    let x = 0, 
+        y = 0;
     if (this.player) {
-      let x = this.player.x - this.width / 2,
-          y = this.player.y - this.height / 2;
-      if (x < 0) x = 0;
-      else if (x > this.map.width * 16 - this.width) x = this.map.width * 16 - this.width;
-      if (y < 0) y = 0;
-      else if (y > this.map.height * 16 - this.height) y = this.map.height * 16 - this.height;
-      return {
-        x: x,
-        y: y
-      };
+      x = this.player.x - this.width / 2;
+      y = this.player.y - this.height / 2;
+      
+      if (x < 0) {
+        x = 0;
+      } else if (x > this.map.width * 16 - this.width) {
+        x = this.map.width * 16 - this.width;
+      }
+      
+      if (y < 0) {
+        y = 0;
+      } else if (y > this.map.height * 16 - this.height) {
+        y = this.map.height * 16 - this.height;
+      }
     }
     return {
-      x: 0,
-      y: 0
+      x: x,
+      y: y
     };
   }
 }

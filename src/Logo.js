@@ -3,8 +3,8 @@ class Logo {
         this.text = "Overworld";
         this.font = "'Press Start 2P', Courier";
         this.size = 18;
-        this.x = x | 40;
-        this.y = y | 40;
+        this.x = x || 40;
+        this.y = y || 40;
         this.strokeStyle = 'black';
         this.fillStyle = 'red';
         this.step = 0;
@@ -26,9 +26,6 @@ class Logo {
 
         context.font = "9px " + this.font;
         context.fillStyle = 'white';
-        //context.shadowColor = 'gray';
-        //context.shadowOffsetY = 1;
-        //context.shadowOffsetX = 1;
         context.fillText("A tiny Zeldaish game", 30, 70);
         context.fillText(" made by John Forne", 30, 80);
         context.fillText("     in 2017", 30, 90);

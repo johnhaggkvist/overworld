@@ -3,8 +3,8 @@ class Text {
         this.text = text;
         this.font = "'Press Start 2P', Courier";
         this.size = 12;
-        this.x = x | 0;
-        this.y = y | 0;
+        this.x = x || 0;
+        this.y = y || 0;
         this.strokeStyle = 'black';
         this.fillStyle = 'red';
     }

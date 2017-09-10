@@ -64,7 +64,6 @@ class WorldMap {
             for (let y = 0; y < this.height - 1; y++) {
                 if (isPole(x, y)) {
                     let south = isPole(x, y + 1),
-                        north = isPole(x, y - 1),
                         east = isPole(x + 1, y),
                         west = isPole(x - 1, y);
                     if (west && !east && !south) {
