@@ -23,5 +23,9 @@
         resources.push(resource.id);
         let tag = resource.tagName.toLowerCase();
         let event = tag === 'img' ? 'load' : 'canplay';
-        resource.addEventListener(event, () => loadedResource(resource.id));
+        if (resource.complete || (resource.readyState && resource.readyState === 4)) {
+          loadedResource(resource.id);
+        } else {
+          resource.addEventListener(event, () => loadedResource(resource.id));
+        }
       }</script><script type="text/javascript" src="/overworld/static/js/main.bf5d628f.js"></script></body></html>
