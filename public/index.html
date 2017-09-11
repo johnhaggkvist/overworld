@@ -148,37 +148,39 @@
 
     </div>
     <script>
-      let resources = ['webfonts']
-          loaded = [];
+      (function() {
+        let resources = ['webfonts'],
+            loaded = [];
 
-      WebFontConfig = {
-        google: {
-            families: ['Press Start 2P']
-        },
-        active: () => loadedResource('webfonts')
-      };
-      (function(d) {
-        var wf = d.createElement('script'), s = d.scripts[0];
-        wf.src = 'webfont.js'; // https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js
-        wf.async = true;
-        s.parentNode.insertBefore(wf, s);
-      })(document);
+        WebFontConfig = {
+          google: {
+              families: ['Press Start 2P']
+          },
+          active: () => loadedResource('webfonts')
+        };
+        (function(d) {
+          var wf = d.createElement('script'), s = d.scripts[0];
+          wf.src = 'webfont.js'; // https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js
+          wf.async = true;
+          s.parentNode.insertBefore(wf, s);
+        })(document);
 
-      let loadedResource = (resource) => {
-        loaded.push(resource);
-        document.getElementById("loading").dataset.percent = loaded.length / resources.length;
-      };
+        let loadedResource = (resource) => {
+          loaded.push(resource);
+          document.getElementById("loading").dataset.percent = loaded.length / resources.length;
+        };
 
-      for (let resource of document.getElementsByClassName('resource')) {
-        resources.push(resource.id);
-        let tag = resource.tagName.toLowerCase();
-        let event = tag === 'img' ? 'load' : 'canplay';
-        if (resource.complete || (resource.readyState && resource.readyState === 4)) {
-          loadedResource(resource.id);
-        } else {
-          resource.addEventListener(event, () => loadedResource(resource.id));
+        for (let resource of document.getElementsByClassName('resource')) {
+          resources.push(resource.id);
+          let tag = resource.tagName.toLowerCase();
+          let event = tag === 'img' ? 'load' : 'canplay';
+          if (resource.complete || (resource.readyState && resource.readyState === 4)) {
+            loadedResource(resource.id);
+          } else {
+            resource.addEventListener(event, () => loadedResource(resource.id));
+          }
         }
-      }
+      })();
     </script>
   </body>
 </html>
